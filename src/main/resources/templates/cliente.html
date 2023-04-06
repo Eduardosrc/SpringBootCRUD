@@ -1,0 +1,165 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <title>CRUD SpringBoot</title>
+
+</head>
+
+<body>
+
+    <br>
+    <div class="container w-50">
+      <!-- Botón Nuevo Cliente -->
+      <button type="button" class="btn btn-outline-info mb-2" data-toggle="modal" data-target="#modal-registrar" id="btn-nuevo">
+      Nuevo
+      </button>
+
+      <!--Tabla clientes-->
+        <table class="table table-striped table-hover">
+            <thead>
+              <tr class = "table-dark">
+                <th scope="col">Código</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Fecha Nacimiento</th>
+                <th scope="col">País</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+              <tr th:each="cliente:${clientes}">
+                <th id="idcod" scope="row" th:utext="${cliente.id}"></th>
+                <td th:utext="${cliente.name}"></td>
+                <td th:utext="${cliente.birth}"></td>
+                <td th:utext="${cliente.pais.name}"></td>
+                <td>
+                  <button class="btn btn-warning btn-editar" data-target="#modal-editar" data-toggle="modal">Editar</button>
+                </td>
+                <td>
+                  <button class="btn btn-danger btn-eliminar">Eliminar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+    </div>
+
+    <!-- Modal Registrar-->
+    <div class="modal fade" id="modal-registrar" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Nuevo Cliente</h5>
+          </div>
+          <div class="modal-body">
+            <form action="/cliente/guardar" method="post">
+              <div class="form-group">
+                <label for="formGroupExampleInput">Nombre</label>
+                <input type="text" class="form-control" id="idnombre" name="nombre">
+              </div> 
+              <br>
+              <div class="row">
+                <div class="col">
+                  <label for="formGroupExampleInput">Fecha Nacimiento</label>
+                  <input size="16" type="date" class="form-control" id="idfecha" name="fecha">
+                </div>
+                <div class="col">
+                  <label for="formGroupExampleInput">País</label>
+                  <select class="form-select" aria-label="Default select example" id="idpais" name="pais">
+                    <option value="0" selected>Seleccione País</option>
+                    <option th:each="pais:${paises}" th:utext="${pais.name}" th:value="${pais.id}"></option>
+                  </select>
+                </div>
+              </div>
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <button type="submit" class="btn btn-success" id="btn-registrar">Registrar</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="btn-cancelar">Cancelar</button>
+                
+              </div>
+              
+            </form>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Editar-->
+    <div class="modal fade" id="modal-editar" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Editar Cliente</h5>
+          </div>
+          <div class="modal-body">
+            <form action="/cliente/editar" method="post">
+              <div class="form-group">
+                <input type="text" name="codigoEdit" class="form-control" id="idcodigo-edit" hidden>
+                <label >Nombre</label>
+                <input type="text" class="form-control" name="nombreEdit" id="idnombre-edit">
+              </div>
+              <br>
+              <div class="row">
+                <div class="col">
+                  <label>Fecha Nacimiento</label>
+                  <input size="16" type="date" class="form-control" name="fechaEdit" id="idfecha-edit">
+                </div>
+                <div class="col">
+                  <label>País</label>
+                  <select class="form-select" aria-label="Default select example" name="paisEdit" id="idpais-edit">
+                    <option value="0" selected>Seleccione País</option>
+                    <option th:each="pais:${paises}" th:utext="${pais.name}" th:value="${pais.id}"></option>
+                  </select>
+                </div>
+              </div>
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <button type="submit" class="btn btn-success" id="btn-editar">Editar</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" id="btn-cancelar-editar">Cancelar</button>
+
+              </div>
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script>
+  //Limpiar inputs del modal al cancelar
+  $(document).on("click","#btn-cancelar",function(){
+      $("#idnombre").val("");
+      $("#idfecha").val("");
+      $("#idpais").val(0);
+  })
+
+  //Botón Eliminar
+  $(document).on("click",".btn-eliminar", function(){
+    let id = $(this).parents("tr").find("th")[0].innerHTML;
+    window.location = "eliminar/" + id;
+  })
+
+  //Botón Editar
+  $(document).on("click",".btn-editar", function(){
+    let id = $(this).parents("tr").find("th")[0].innerHTML;
+
+    $.get("buscar/" + id, function(cliente){
+      $("#idcodigo-edit").val(id);
+      $("#idnombre-edit").val(cliente.name);
+      $("#idfecha-edit").val(cliente.birth);
+      $("#idpais-edit").val(cliente.pais.id);
+    })
+  })
+
+</script>
+
+</html>
